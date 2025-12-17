@@ -1,8 +1,8 @@
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import StarsBackground from "@/components/StarsBackground";
-import ScrollArrow from "@/components/ScrollArrow";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import StarsBackground from "../components/StarsBackground";
+import ScrollArrow from "../components/ScrollArrow";
 
 export default function RootLayout({
   children,
