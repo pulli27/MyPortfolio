@@ -1,168 +1,211 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-import { projects, Project } from "../constant/constant"; // Adjust path if needed
-import ProjectModal from "./ProjectModal"; // Adjust path if needed
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Lora } from "next/font/google";
 
-gsap.registerPlugin(ScrollTrigger);
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
 
-const Projects = () => {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const sectionRef = useRef<HTMLDivElement>(null);
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  technologies: string[];
+  github: string;
+  live?: string;
+  image?: string;
+};
 
-  // Separate projects for the layout
-  const featuredProject = projects.find((p) => p.isFeatured);
-  const otherProjects = projects.filter((p) => !p.isFeatured);
-  
-  // Get first 4 other projects for the main grid (2 top row, 2 bottom row)
-  const gridProjects = otherProjects.slice(0, 4);
-  const remainingProjects = otherProjects.slice(4); // Any additional projects
+const projects: Project[] = [
+  {
+    id: 1,
+    title: "PackPal – Smart Bag Selling System",
+    description:
+      "A full-stack bag-selling e-commerce system featuring user authentication, product customization, real-time stock updates, secure checkout, and multi-role admin dashboards.",
+    technologies: ["React", "Node.js", "MongoDB", "Express"],
+    github: "https://github.com/pulli27/PackPal",
+    image: "/images/packpal.jpg",
+  },
+  {
+    id: 2,
+    title: " ZenTrack – Wellness & Habit Tracking App",
+    description:
+      "A wellness and habit-tracking mobile app that helps users build healthy routines through daily habit tracking, mood journaling, hydration reminders, and progress insights.",
+    technologies: ["Kotlin", "SharedPreferences", "AndroidStudio"],
+    github: "https://github.com/pulli27/ZenTrack-Daily-Habit-Tracker",
+    image: "/images/zentrack.jpg",
+  },
+  {
+    id: 3,
+    title: "Crown Crest- Online Hotel Reservation System",
+    description:
+      "A web-based hotel management and booking system where guests can browse rooms, make reservations, and receive instant confirmations, while administrators manage staff, roles, and system operations through a secure backend.",
+    technologies: ["Java", "JSP/Servlet", "SQL", "Tomcat"],
+    github: "https://github.com/pulli27/CrownCrest",
+    image: "/images/crowncrest.jpg",
+  },
+  {
+    id: 4,
+    title: "Microwins – Mobile App Project!",
+    description:
+      "A mobile productivity app designed to help users manage tasks, track progress, and stay organized through a clean, modern, and intuitive interface.",
+    technologies: ["Kotlin", "AndroidStudio"],
+    github: "https://github.com/pulli27/MicroWins",
+    image: "/images/microwins.jpg",
+  },
 
-  const openModal = (project: Project) => setSelectedProject(project);
-  const closeModal = () => setSelectedProject(null);
+  {
+    id: 5,
+    title: "YummyGo – Food Ordering App!",
+    description:
+      "A mobile food ordering app designed with Figma, featuring menu browsing, meal customization, and a smooth checkout flow with a modern, user-friendly UI.",
+    technologies: ["Figma", "UI/UX"],
+    github: "https://github.com/pulli27/MicroWins",
+    image: "/images/yummygo.jpg",
+  },
 
-  useEffect(() => {
-    if (sectionRef.current) {
-      const projectCards = sectionRef.current.querySelectorAll('.project-card');
-      gsap.fromTo(
-        projectCards,
-        { opacity: 0, y: 80 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.2,
-          stagger: 0.3,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none',
-          },
-        }
-      );
-    }
+  {
+    id: 6,
+    title: "Immunize Hub- Online Vaccination Portal",
+    description:
+      "An online vaccination portal that digitalizes patient registration, clinic assignment, and vaccination records, with a nurse module for verification, status updates, and digital certificate issuance.",
+    technologies: ["html", "css", "js", "php", "sql"],
+    github: "https://github.com/pulli27/ImmunizeHub",
+    image: "/images/immunizehub.jpg",
+  },
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  {
+    id: 7,
+    title: "Portfolio Website",
+    description:
+      "A modern, responsive portfolio website showcasing projects, skills, and contact information with smooth animations.",
+    technologies: ["TypeScript", "CSS3", "react"],
+    github: "https://github.com/pulli27/MyPortfolio",
+    live: "https://pulli27.github.io/MyPortfolio/",
+    image: "/images/portfolio.png",
+  },
+];
 
+export default function Projects() {
   return (
-    <>
-      <section id="projects" ref={sectionRef} className="relative py-20 px-4 md:px-8">
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-[#0d0d28]/40 z-0 pointer-events-none"></div>
-        
-        <div className="relative z-10">
-          <h2 className="text-4xl font-bold mb-12 text-center text-[#80e0ff]">
-            Projects
-          </h2>
+    <section
+      id="projects"
+      className="relative min-h-screen w-full px-6 py-28 overflow-hidden"
+    >
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/60 to-transparent" />
 
-        {/* Main Grid Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-          {/* BIG FEATURED PROJECT - Takes full height on left */}
-          {featuredProject && (
+      <div className="relative z-10 max-w-7xl mx-auto text-white">
+        {/* ================= HEADER ================= */}
+<div className="relative text-center mb-20 animate-fadeInUp">
+
+  {/* Decorative lines BEHIND the text */}
+  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-85 -z-8">
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+  </span>
+
+  {/* Main heading */}
+<h4
+  className={`
+    text-4xl md:text-3xl lg:text-4xl
+    font-extrabold tracking-wide
+    ${lora.className}
+  `}
+>
+  <span className="text-white">Featured</span>{" "}
+  <span className="text-[#8B6FD6]">Projects</span>
+  
+</h4>
+
+
+
+</div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          {projects.map((project, index) => (
             <div
-              onClick={() => openModal(featuredProject)}
-              className="project-card relative bg-[#1110515e] rounded-xl border overflow-hidden cursor-pointer group text-white lg:row-span-2 min-h-[60vh] lg:min-h-[600px] flex flex-col"
+              key={project.id}
+              className="group relative bg-[#2A2A35]/60 backdrop-blur-md border border-[#8B6FD6]/20 rounded-3xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_25px_50px_rgba(139,111,214,0.35)]"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="relative w-full h-[60%] overflow-hidden p-4 bg-black/40">
+              {/* Image */}
+              <div className="relative h-56 overflow-hidden">
                 <Image
-                  src={featuredProject.image}
-                  alt={featuredProject.title}
+                  src={project.image!}
+                  alt={project.title}
                   fill
-                  className="object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-              </div>
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="text-3xl font-bold">{featuredProject.title}</h3>
-                  <p className="text-gray-300 mt-2">{featuredProject.description}</p>
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#8B6FD6]/80 via-[#6a4fcf]/70 to-[#3b2a6f]/80 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center gap-5">
+                  {/* GitHub */}
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-5 py-2 bg-[#8B6FD6] rounded-full text-sm font-semibold hover:scale-105 transition"
+                  >
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    Code
+                  </a>
+
+                  {/* Live Demo */}
+                  {project.live && (
+                    <a
+                      href={project.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-5 py-2 border border-white rounded-full text-sm font-semibold hover:bg-white hover:text-black transition"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <path d="M15 3h6v6" />
+                        <path d="M10 14L21 3" />
+                      </svg>
+                      Live
+                    </a>
+                  )}
                 </div>
               </div>
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="flex gap-4">
-                  <span className="text-xl font-bold">View Details</span>
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="text-lg font-bold mb-2 text-white">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-3 py-1 text-xs font-semibold rounded-full bg-[#8B6FD6]/15 text-[#8B6FD6]"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
-          )}
-
-          {/* Right side grid - 2x2 layout */}
-          {gridProjects.slice(0, 4).map((project) => (
-            <SmallProjectCard 
-              key={project.title} 
-              project={project} 
-              openModal={openModal}
-              className="lg:col-span-1"
-            />
           ))}
         </div>
-
-        {/* Additional Projects if any */}
-        {remainingProjects.length > 0 && (
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {remainingProjects.map((project) => (
-              <SmallProjectCard key={project.title} project={project} openModal={openModal} />
-            ))}
-          </div>
-        )}
-        </div>
-      </section>
-
-      {/* Modal */}
-      {selectedProject && (
-        <ProjectModal project={selectedProject} onClose={closeModal} />
-      )}
-    </>
+      </div>
+    </section>
   );
-};
-
-
-// Reusable Small Project Card Component
-interface SmallCardProps {
-  project: Project;
-  openModal: (project: Project) => void;
-  className?: string;
 }
-
-const SmallProjectCard = ({ project, openModal, className = "" }: SmallCardProps) => {
-  return (
-    <div
-      onClick={() => openModal(project)}
-      className={`project-card relative bg-[#1110515e] rounded-xl border overflow-hidden cursor-pointer group text-white h-auto min-h-[250px] lg:min-h-[290px] flex flex-col ${className}`}
-    >
-      {/* Image at top */}
-      <div className="relative w-full h-[55%] overflow-hidden p-4 bg-black/40">
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          className="object-contain group-hover:scale-110 transition-transform duration-300 rounded-lg"
-        />
-      </div>
-
-      {/* Text content below */}
-      <div className="p-4 flex-1 flex flex-col justify-between">
-        <div>
-          <h3 className="text-xl font-bold">{project.title}</h3>
-          <p className="text-gray-300 text-sm mt-1">{project.description}</p>
-        </div>
-      </div>
-
-      {/* Hover Overlay */}
-      <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="flex gap-4">
-          <span className="text-lg font-bold">View Details</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-export default Projects;

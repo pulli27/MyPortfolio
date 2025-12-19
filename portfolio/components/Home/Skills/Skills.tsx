@@ -1,162 +1,239 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+import { Lora } from "next/font/google";
+import { Chakra_Petch } from "next/font/google";
 
-const frontendSkills = [
-  { name: "HTML", logo: "/logos/html.png" },
-  { name: "CSS", logo: "/logos/css.png" },
-  { name: "JavaScript", logo: "/logos/javascript.png" },
-  { name: "React", logo: "/logos/react.png" },
-  { name: "React Native", logo: "/logos/react-native.png" },
-  { name: "Next.js", logo: "/logos/nextjs.png" },
-  { name: "TailwindCSS", logo: "/logos/tailwind.png" },
-  { name: "Bootstrap", logo: "/logos/bootstrap.png" },
-];
-const backendSkills = [
-  { name: "PHP", logo: "/logos/php.png" },
-  { name: "Node.js", logo: "/logos/nodejs.png" },
-  { name: "Ballerina", logo: "/logos/ballerina.png" },
-  { name: "MySQL", logo: "/logos/mysql.png" },
-  { name: "MongoDB", logo: "/logos/mongodb.png" },
-];
-const languages = [
-  { name: "C", logo: "/logos/C.png" },
-  { name: "Java", logo: "/logos/java.png" },
-  { name: "JavaScript", logo: "/logos/javascript.png" },
-  { name: "Python", logo: "/logos/python.png" },
-];
-const tools = [
-  { name: "Git", logo: "/logos/git.png" },
-  { name: "Figma", logo: "/logos/figma.png" },
-  { name: "Canva", logo: "/logos/canva.png" },
-  { name: "Jira", logo: "/logos/jira.png" },
-  { name: "Postman", logo: "/logos/postman.png" },
+const chakraPetch = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+
+
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
+
+
+
+/* ---------------------------------- */
+/* Types */
+/* ---------------------------------- */
+type Skill = {
+  name: string;
+  logo: string;
+};
+
+type SkillGroup = {
+  name: string;
+  key: string;
+  items: Skill[];
+};
+
+/* ---------------------------------- */
+/* Skills Data */
+/* ---------------------------------- */
+const skills: SkillGroup[] = [
+  {
+    name: "Frontend",
+    key: "Frontend",
+    items: [
+      { name: "HTML", logo: "/logos/html.png" },
+      { name: "CSS", logo: "/logos/css.png" },
+      { name: "JavaScript", logo: "/logos/javascript.png" },
+      { name: "React", logo: "/logos/react.png" },
+      { name: "Next.js", logo: "/logos/nextjs.png" },
+      { name: "Tailwind CSS", logo: "/logos/tailwind.png" },
+      
+    ],
+  },
+  {
+    name: "Backend",
+    key: "Backend",
+    items: [
+      { name: "Node.js", logo: "/logos/nodejs.png" },
+      { name: "PHP", logo: "/logos/php.png" },
+      { name: ".NET", logo: "/logos/net.png" },
+      { name: "MongoDB", logo: "/logos/mongodb.png" },
+      { name: "MySQL", logo: "/logos/mysql.png" },
+      { name: "Express.js", logo: "/logos/ex.png" },
+    ],
+  },
+  {
+    name: "Languages",
+    key: "Languages",
+    items: [
+      { name: "Java", logo: "/logos/java.png" },
+      { name: "Python", logo: "/logos/python.png" },
+      { name: "C", logo: "/logos/c.png" },
+      { name: "C#", logo: "/logos/csharp.png" },
+      { name: "C++", logo: "/logos/c++.png" },
+      { name: "Php", logo: "/logos/php.png" },
+      { name: "kotlin", logo: "/logos/otlin.png" },
+      { name: "R", logo: "/logos/r.png" },
+    ],
+  },
+  {
+    name: "Tools",
+    key: "Tools",
+    items: [
+      { name: "Git", logo: "/logos/git.png" },
+      { name: "GitHub", logo: "/logos/github.jpg" },
+      { name: "Android Studio", logo: "/logos/androidStudio.png" },
+      { name: "VS Code", logo: "/logos/vscode.png" },
+      { name: "Visual Studio", logo: "/logos/visualStudio.png" },
+      { name: "Postman", logo: "/logos/postman.png" },
+      { name: "Jira", logo: "/logos/jira.png" },
+      { name: "Figma", logo: "/logos/figma.png" },
+      { name: "Canva", logo: "/logos/canva.png" },
+      
+    ],
+  },
 ];
 
+/* ---------------------------------- */
+/* Component */
+/* ---------------------------------- */
 export default function SkillsSection() {
-  const renderSkillCard = (skill: { name: string; logo: string }) => (
-    <div
-      key={skill.name}
-      // CHANGED: Matched reference padding (px-2 py-2) and flex spacing
-      className="flex items-center justify-center space-x-1 sm:space-x-2 bg-[#16166367] border-2 opacity-90 px-1.5 py-1 sm:px-2 sm:py-2 rounded-lg sm:rounded-xl md:rounded-2xl shadow-sm hover:scale-105 transition-transform w-full min-w-0"
-    >
-      {/* Logo */}
-      {/* CHANGED: Matched reference size: w-6 h-6 mobile, w-8 h-8 desktop */}
-      <div className="w-4 h-4 sm:w-6 sm:h-6 md:w-8 md:h-8 relative shrink-0">
-        <Image src={skill.logo} alt={skill.name} fill className="object-contain" />
-      </div>
+  const [selected, setSelected] = useState("All Skills");
 
-      {/* Skill Name */}
-      {/* CHANGED: Matched reference text size: text-xs mobile, text-sm desktop */}
-      <span className="text-white font-medium text-[9px] sm:text-xs md:text-sm truncate">
-        {skill.name}
-      </span>
-    </div>
+  const categories = useMemo(
+    () => ["All Skills", ...skills.map((s) => s.key)],
+    []
   );
 
-  const BigCard = ({ title, skills }: { title: string; skills: typeof frontendSkills }) => {
-    const cardRef = useRef<HTMLDivElement>(null);
+  const allSkills = useMemo(
+    () => skills.flatMap((g) => g.items),
+    []
+  );
 
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-      if (!cardRef.current) return;
-      const { left, top, width, height } = cardRef.current.getBoundingClientRect();
-      const x = e.clientX - left;
-      const y = e.clientY - top;
-      const centerX = width / 2;
-      const centerY = height / 2;
-
-      const speed = 20;
-      const rotateY = ((x - centerX) / centerX) * speed;
-      const rotateX = -((y - centerY) / centerY) * speed;
-      cardRef.current.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
-      cardRef.current.style.boxShadow = `0 0 20px #80e0ff`;
-    };
-
-    const handleMouseLeave = () => {
-      if (!cardRef.current) return;
-      cardRef.current.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
-      cardRef.current.style.boxShadow = `0 0 8px rgba(128, 224, 255, 0.1)`;
-    };
-
-    return (
-      <div
-        ref={cardRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-        className="skill-card big-card bg-[#0f0f2f] border border-[#80e0ff20] rounded-2xl sm:rounded-3xl p-3 sm:p-6 md:p-8 flex flex-col items-center shadow-[0_0_8px_#80e0ff] w-full sm:w-[48%] mb-5 h-auto sm:min-h-[400px]"
-      >
-        <h3 className="text-lg sm:text-2xl md:text-3xl font-bold mb-5 sm:mb-8 text-[#80dfffc7] tracking-wide text-center">{title}</h3>
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-3 w-full flex-1 content-start">
-          {skills.map(renderSkillCard)}
-        </div>
-      </div>
-    );
-  };
-
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (sectionRef.current) {
-      const skillCards = sectionRef.current.querySelectorAll('.skill-card');
-      gsap.fromTo(
-        skillCards,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  const visibleGroups =
+    selected === "All Skills"
+      ? [{ name: "All Skills", items: allSkills }]
+      : skills.filter((g) => g.key === selected);
 
   return (
-    // CHANGED: Matched reference padding logic: px-[12vw] md:px-[7vw] lg:px-[20vw]
-    <section id="skills" ref={sectionRef} className="relative py-24 text-white overflow-hidden px-[12vw] md:px-[7vw] lg:px-[20vw]">
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-[#08081f]/40 z-0 pointer-events-none"></div>
-      
-      <div className="relative z-10">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold text-[#80e0ff]">My Skills</h2>
-        
-      </div>
+    <section
+      id="skills"
+      className="relative min-h-screen w-full px-10 py-22 overflow-hidden"
+    >
+      {/* 🔹 SAME BLACK READABILITY OVERLAY AS ABOUT */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 pointer-events-none" />
 
-      {/* CHANGED: Switched to Flexbox with wrap and justify-between to match reference */}
-      <div className="flex flex-wrap gap-2 lg:gap-5 py-10 justify-between">
-        <BigCard title="Frontend" skills={frontendSkills} />
-        <BigCard title="Backend" skills={backendSkills} />
-        <BigCard title="Languages" skills={languages} />
-        <BigCard title="Tools" skills={tools} />
-      </div>
+      {/* 🔹 SAME TOP GRADIENT LINE AS ABOUT */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/200 to-transparent" />
 
-      {/* Marquee section - Full width outside container */}
-      <div className="mt-16 overflow-hidden w-screen relative left-1/2 right-1/2 -mx-[50vw]">
-        <div className="flex gap-8 animate-marquee">
-            {[...frontendSkills, ...backendSkills, ...languages, ...tools, ...frontendSkills, ...backendSkills].map((skill, index) => (
-              <div key={index} className="shrink-0 w-12 h-16 relative hover:scale-110 transition-all duration-350">
-                <Image src={skill.logo} alt={skill.name} fill className="object-contain" />
+      <div className="relative z-10 max-w-7xl mx-auto text-white">
+          {/* ================= HEADER ================= */}
+<div className="relative text-center mb-20 animate-fadeInUp">
+
+  {/* Decorative lines BEHIND the text */}
+  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-102 -z-8">
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+  </span>
+
+  {/* Main heading */}
+<h4
+  className={`
+    text-4xl md:text-3xl lg:text-4xl
+    font-extrabold tracking-wide
+    ${lora.className}
+  `}
+>
+  <span className="text-[#8B6FD6]">Skills & </span>{" "}
+  <span className="text-white">Technologies</span>
+</h4>
+
+
+
+</div>
+        {/* Filters */}
+        <div className="flex flex-wrap justify-center gap-3 mb-13">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelected(cat)}
+              className={`px-8 py-3 rounded-full text-sm font-semibold transition-all
+                ${
+                  selected === cat
+                    ? "bg-[#8B6FD6] scale-105 shadow-lg"
+                    : "bg-[#2A2A35] hover:text-[#8B6FD6]"
+                }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Skill Grid */}
+        <div className="space-y-16">
+          {visibleGroups.map((group) => (
+            <div key={group.name}>
+              {selected !== "All Skills" && (
+              <h3
+  className={`
+    text-3xl
+    font-bold
+    text-[#8B6FD6]
+    mb-6
+    tracking-wide
+    underline
+    underline-offset-8
+    decoration-[#8B6FD6]/60
+    ${chakraPetch.className}
+  `}
+>
+  {group.name}
+</h3>
+
+
+              )}
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {group.items.map((skill) => (
+                  <div
+                    key={skill.name}
+                    className="bg-[#2d2c2c]/60 backdrop-blur-md border border-white/5 rounded-xl p-4 flex flex-col items-center hover:-translate-y-1 hover:shadow-xl transition-all"
+                  >
+                    <div className="relative w-10 h-10 mb-3">
+                      <Image
+                        src={skill.logo}
+                        alt={skill.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                    <p className="text-sm font-semibold">{skill.name}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* 🔹 SAME MARQUEE ROW (UNCHANGED) */}
+      <div className="relative z-10 mt-20 overflow-hidden">
+        <div className="flex gap-10 animate-marquee px-10">
+          {[...allSkills, ...allSkills].map((skill, i) => (
+            <div
+              key={i}
+              className="relative w-12 h-12 shrink-0 opacity-80 hover:opacity-100 transition"
+            >
+              <Image
+                src={skill.logo}
+                alt={skill.name}
+                fill
+                className="object-contain"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
