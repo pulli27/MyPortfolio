@@ -90,3 +90,21 @@ body {
 .animate-flash {
   animation: flash 0.6s ease-out forwards;
 }
+
+@keyframes nameReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-nameReveal {
+  animation: nameReveal 1.2s ease-out forwards;
+  text-shadow: 0 0 35px rgba(139, 111, 214, 0.4);
+}

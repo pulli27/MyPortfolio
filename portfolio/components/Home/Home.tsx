@@ -2,6 +2,7 @@
 
 import React from "react";
 import Hero from "./Hero/Hero";
+import About from "./About/About";
 import SkillsSection from "./Skills/Skills";
 import Projects from "./Projects/Projects";
 import Education from "./Education/Education";
@@ -18,6 +19,7 @@ const Home = () => {
       {/* Main Content */}
       <div className="relative z-10">
         <Hero />
+        <About />
         <SkillsSection />
         <Projects />
         <Education />
