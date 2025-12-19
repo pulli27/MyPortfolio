@@ -1,8 +1,19 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import StarsBackground from "../components/StarsBackground";
-import ScrollArrow from "../components/ScrollArrow";
+import ResponsiveNav from "../components/Home/Navbar/ResponsiveNav";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+export const metadata: Metadata = {
+  title: "Piumini Tishani",
+  description: "Portfolio Website",
+};
 
 export default function RootLayout({
   children,
@@ -11,12 +22,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="relative overflow-x-hidden">
-        <StarsBackground />
-        <Navbar />
+      <body className={`${inter.className} antialiased`}>
+        <ResponsiveNav />
         {children}
-        <Footer />
-        <ScrollArrow />
+        <ToastContainer theme="dark" />
       </body>
     </html>
   );
