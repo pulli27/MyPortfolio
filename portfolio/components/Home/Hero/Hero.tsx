@@ -156,13 +156,19 @@ const Hero = () => {
       transition: "transform 0.1s ease-out, border-color 0.3s, box-shadow 0.3s",
     }}
   >
-    <Image
-      src="/images/profile1.jpg"
-      alt="Pulmi Vihansa"
-      fill
-      priority
-      className="object-cover object-center scale-135"
-    />
+    
+  <Image
+    src="/images/p.jpeg"
+    alt="Pulmi Vihansa"
+    fill
+    priority
+    className="object-cover scale-100"
+    style={{
+      objectPosition: "center 15%", // 👈 moves image DOWN slightly
+    }}
+  />
+
+
   </div>
 </div>
 

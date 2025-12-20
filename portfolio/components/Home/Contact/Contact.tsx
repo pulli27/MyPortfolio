@@ -1,229 +1,241 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faPhone, 
-  faEnvelope, 
-  faLocationDot
-} from "@fortawesome/free-solid-svg-icons";
+import { Lora } from "next/font/google";
 
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import emailjs from "@emailjs/browser";
-import { toast } from "react-toastify";
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
 
-gsap.registerPlugin(ScrollTrigger);
+import { useState } from "react";
+import {
+  MapPin,
+  Mail,
+  Linkedin,
+  Github,
+} from "lucide-react";
 
-export default function ContactSection() {
-  const form = useRef<HTMLFormElement>(null);
-  const [isSent, setIsSent] = useState(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
+export default function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
 
-  useEffect(() => {
-    if (sectionRef.current) {
-      gsap.fromTo(
-        sectionRef.current,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse',
-          },
-        }
-      );
-    }
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(null);
 
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const sendEmail = (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Check if environment variables are loaded
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-    
-    if (!serviceId || !templateId || !publicKey) {
-      toast.error("EmailJS configuration is missing. Please check environment variables.", {
-        autoClose: 5000,
-        closeOnClick: true,
-        theme: "dark"
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      const res = await fetch("https://formspree.io/f/xzznnjan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, _replyto: form.email }),
       });
-      return;
+
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch {
+      setStatus("error");
+    } finally {
+      setLoading(false);
     }
-    
-    setIsSent(true);
-
-    // Get form data
-    const formData = new FormData(form.current!);
-    const name = formData.get('name') as string;
-    const email = formData.get('email') as string;
-    const mobile = formData.get('mobile') as string;
-    const message = formData.get('message') as string;
-
-    // Combine mobile number with message
-    const fullMessage = mobile 
-      ? `Phone: ${mobile}\n\n${message}`
-      : message;
-
-    // Send email with combined message
-    emailjs.send(serviceId, templateId, {
-      name: name,
-      email: email,
-      message: fullMessage
-    }, publicKey)
-      .then(() => {
-          form.current?.reset();
-          toast.success("Message sent successfully!", {
-            autoClose: 3000,
-            closeOnClick: true,
-            theme: "dark"
-          });
-          // Reset the sent state after a delay
-          setTimeout(() => setIsSent(false), 3000);
-      }, (error) => {
-          console.log(error.text);
-          toast.error("Failed to send message.", {
-            autoClose: 3000,
-            closeOnClick: true,
-            theme: "dark"
-          });
-          setIsSent(false);
-      });
   };
 
   return (
-    <section id="contact" ref={sectionRef} className="relative py-20 text-white overflow-hidden">
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-[#0d0d28]/40 z-0 pointer-events-none"></div>
-      
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-bold text-center text-[#80e0ff] mb-8 md:mb-12 drop-shadow-lg">
-          Contact Me
-        </h2>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          {/* --- Left Column: Contact Info --- */}
-          <div className="space-y-12">
+    <section
+  id="contact"
+  className="relative py-20 overflow-hidden"
+>
+  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40" />
+  <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/300 to-transparent" />
+
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* ================= HEADER ================= */}
+<div className="relative text-center mb-20 animate-fadeInUp">
+
+  {/* Decorative lines BEHIND the text */}
+  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-57 -z-8">
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+  </span>
+
+  {/* Main heading */}
+<h4
+  className={`
+    text-4xl md:text-3xl lg:text-4xl
+    font-extrabold tracking-wide
+    ${lora.className}
+  `}
+>
+  <span className="text-[#8B6FD6]">Contact</span>{" "}
+  <span className="text-white">Me</span>
+</h4>
+
+
+
+</div>
+
+        {/* GRID */}
+        <div className="grid md:grid-cols-2 gap-16">
+          {/* LEFT INFO GRID */}
+          <div className="space-y-8">
+            {/* LOCATION */}
+            <InfoCard
+              icon={<MapPin />}
+              title="Location"
+              content="Sri Lanka"
+            />
+
+            {/* EMAIL */}
+            <InfoCard
+              icon={<Mail />}
+              title="Email"
+              content={
+                <a
+                  href="mailto:pulmivihansa27@gmail.com"
+                  className="text-[#8B6FD6] hover:underline"
+                >
+                  pulmivihansa27@gmail.com
+                </a>
+              }
+            />
+
+            {/* SOCIAL */}
+            <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
+              <h3 className="text-sm uppercase tracking-wide text-gray-400 mb-4">
+                Follow Me
+              </h3>
+              <div className="flex gap-4">
+                <SocialIcon
+                  href="https://www.linkedin.com/in/pulmi-vihansa-4450872a3/"
+                  icon={<Linkedin />}
+                />
+                <SocialIcon
+                  href="https://github.com/pulli27"
+                  icon={<Github />}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT FORM */}
+          <form
+            onSubmit={handleSubmit}
+            className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-8 space-y-6"
+          >
             <div>
-              <h2 className="text-2xl md:text-2xl font-bold leading-tight mb-4">
-                Get in Touch
-              </h2>
-              
+              <h3 className="text-2xl font-bold text-white">
+                Send a Message
+              </h3>
+              <p className="text-gray-400 text-sm mt-1">
+                Fill out the form below and I’ll get back to you
+              </p>
             </div>
 
-            <div className="space-y-6">
-              {/* Phone / WhatsApp */}
-              <a 
-                href="https://wa.me/94717465113"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-4 hover:text-[#80e0ff] active:text-[#80e0ff] transition-colors duration-300 group"
-              >
-                <div className="w-12 h-12 rounded-full flex items-center justify-center group-hover:bg-[#80e0ff] group-active:bg-[#80e0ff] transition-all duration-300">
-                  <FontAwesomeIcon icon={faPhone} className="w-5 h-5 text-[#80e0ff] group-hover:text-[#0d0d1f] group-active:text-[#0d0d1f] transition-all" />
-                </div>
-                <span className="text-xl font-medium">+94 71 746 5113</span>
-              </a>
-              {/* Email */}
-              <a
-                href="mailto:piuminitishani@gmail.com"
-                className="flex items-center space-x-4 hover:text-[#80e0ff] active:text-[#80e0ff] transition-colors duration-300 group"
-              >
-                <div className="w-12 h-12 rounded-full flex items-center justify-center group-hover:bg-[#80e0ff] group-active:bg-[#80e0ff] transition-all duration-300">
-                  <FontAwesomeIcon icon={faEnvelope} className="w-5 h-5 text-[#80e0ff] group-hover:text-[#0d0d1f] group-active:text-[#0d0d1f] transition-all" />
-                </div>
-                <span className="text-xl font-medium">piuminitishani@gmail.com</span>
-              </a>
-              {/* Location */}
-              <a
-                href="https://www.google.com/maps/search/?api=1&query=Moratuwa,+Sri+Lanka"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-4 hover:text-[#80e0ff] active:text-[#80e0ff] transition-colors duration-300 group"
-              >
-                <div className="w-12 h-12 rounded-full flex items-center justify-center group-hover:bg-[#80e0ff] group-active:bg-[#80e0ff] transition-all duration-300">
-                  <FontAwesomeIcon icon={faLocationDot} className="w-5 h-5 text-[#80e0ff] group-hover:text-[#0d0d1f] group-active:text-[#0d0d1f] transition-all" />
-                </div>
-                <span className="text-xl font-medium">Moratuwa, Sri Lanka</span>
-              </a>
+            <div className="grid md:grid-cols-2 gap-4">
+              <Input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Your Name"
+              />
+              <Input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Your Email"
+              />
             </div>
 
-            {/* Social Icons */}
-            
-          </div>
+            <Input
+              name="subject"
+              value={form.subject}
+              onChange={handleChange}
+              placeholder="Subject"
+            />
 
-          {/* --- Right Column: Form --- */}
-          <div className="bg-[#13132b] p-8 md:p-10 rounded-3xl shadow-2xl border border-white/5 relative z-10">
-            <form ref={form} onSubmit={sendEmail} className="space-y-6">
-              
-              {/* Name Input */}
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  className="w-full bg-[#1e1e36] text-white placeholder-gray-400 px-5 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#80e0ff]/50 border border-transparent transition-all"
-                  required
-                />
-              </div>
+            <textarea
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              rows={5}
+              placeholder="Tell me about your project..."
+              className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none focus:border-[#8B6FD6]"
+              required
+            />
 
-              {/* Email Input */}
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  className="w-full bg-[#1e1e36] text-white placeholder-gray-400 px-5 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#80e0ff]/50 border border-transparent transition-all"
-                  required
-                />
-              </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#8B6FD6] to-[#6a4fcf] hover:opacity-90 transition"
+            >
+              {loading ? "Sending..." : "Send Message"}
+            </button>
 
-              {/* Mobile Input */}
-              <div>
-                <input
-                  type="tel"
-                  name="mobile"
-                  placeholder="Mobile Number"
-                  autoComplete="tel"
-                  className="w-full bg-[#1e1e36] text-white placeholder-gray-400 px-5 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#80e0ff]/50 border border-transparent transition-all"
-                />
-              </div>
-
-              {/* Message Input */}
-              <div>
-                <textarea
-                  name="message"
-                  placeholder="Your Message"
-                  rows={4}
-                  className="w-full bg-[#1e1e36] text-white placeholder-gray-400 px-5 py-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#80e0ff]/50 border border-transparent transition-all resize-none"
-                  required
-                />
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isSent}
-                className="w-full sm:w-auto bg-[#1a2342] hover:bg-[#253055] text-white font-semibold py-4 px-8 rounded-full transition-all duration-300 border border-[#80e0ff]/30 hover:border-[#80e0ff] hover:shadow-[0_0_15px_rgba(128,224,255,0.3)] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSent ? "Message Sent!" : "Send Message"}
-              </button>
-            </form>
-          </div>
+            {status === "success" && (
+              <p className="text-green-400 text-sm">
+                Message sent successfully!
+              </p>
+            )}
+            {status === "error" && (
+              <p className="text-red-400 text-sm">
+                Something went wrong. Please try again.
+              </p>
+            )}
+          </form>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ================= COMPONENTS ================= */
+
+function InfoCard({ icon, title, content }) {
+  return (
+    <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
+      <div className="flex items-center gap-3 mb-2 text-[#8B6FD6]">
+        {icon}
+        <h3 className="text-sm uppercase tracking-wide text-gray-400">
+          {title}
+        </h3>
+      </div>
+      <div className="text-white text-lg">{content}</div>
+    </div>
+  );
+}
+
+function SocialIcon({ href, icon }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      className="w-12 h-12 rounded-xl bg-[#8B6FD6]/20 flex items-center justify-center text-[#8B6FD6] hover:bg-[#8B6FD6] hover:text-white transition"
+    >
+      {icon}
+    </a>
+  );
+}
+
+function Input(props) {
+  return (
+    <input
+      {...props}
+      required
+      className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none focus:border-[#8B6FD6]"
+    />
   );
 }

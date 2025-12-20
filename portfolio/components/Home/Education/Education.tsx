@@ -4,8 +4,14 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Lora } from "next/font/google";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
 
 interface Education {
   id: number;
@@ -13,219 +19,215 @@ interface Education {
   institution: string;
   duration?: string;
   grade?: string;
-  description?: string;
+  description?: React.ReactNode; // ✅ FIXED
   logo: string;
 }
 
 const educationData: Education[] = [
   {
     id: 1,
-    degree: "BSc. (Hons) in Information Technology",
-    institution: "University of Moratuwa, Sri Lanka",
-    duration: "2021 - Present",
-    grade: "3.54 CGPA",
-    description: "Currently pursuing a BSc (Hons) in Information Technology at the University of Moratuwa, Sri Lanka, focusing on core areas such as software engineering, web technologies, data structures, databases, and emerging IT practices, while gaining hands-on experience through projects and industry-aligned coursework.",
-    logo: "/images/unilogo.jpg",
+    degree: "BSc (Hons) Information Technology – Data Science",
+    institution: "Sri Lanka Institute of Information Technology (SLIIT)",
+    duration: "2023 – Present",
+    description: (
+      <div className="text-gray-300 text-sm md:text-base leading-relaxed space-y-4">
+        <p>
+          I am a{" "}
+          <span className="text-white font-semibold">
+            3rd-year undergraduate student
+          </span>{" "}
+          specializing in{" "}
+          <span className="text-[#8B6FD6] font-semibold">Data Science</span>,
+          with a strong passion for building modern, user-focused digital solutions.
+        </p>
+        <div>
+          <p>
+            Through academic coursework, project-based learning, and extracurricular activities, I have developed a solid foundation in software development, problem-solving, and system design. 
+            I have hands-on experience in developing responsive <span className="text-white font-semibold mb-2">web and mobile applications, working with databases and APIs, and applying UI/UX </span>best practices to create intuitive user experiences.
+          </p>
+          
+        </div>
+
+        <p>
+         In addition to technical skills, I bring strong <span className="text-white font-semibold mb-2">teamwork, adaptability, and communication abilities. </span>
+         I am highly motivated, eager to learn, and committed to contributing to innovative and impactful digital solutions.
+        </p>
+      </div>
+    ),
+    logo: "/images/sliit.jfif",
   },
   {
     id: 2,
-    degree: "A/L in ICT, Combined Maths and Physics",
-    institution: "Ferguson High School, Ratnapura",
-    duration: "2019 - 2021",
-    grade: "A B C",
-    description: "Completed my Advanced Level (A/L) education at Ferguson High School, Ratnapura, specialized in ICT, Combined Maths and Physics.",
-    logo: "/images/fhs.png",
-  },
-  {
-    id: 3,
-    degree: "Partially Completed AAT Level II",
-    institution: "AAT Sri Lanka",
-    duration: "2019 Jul - 2020 Jan",
-    description: "Completed part of the AAT Level 2 Examination in English Medium, gaining foundational knowledge in business studies, law, and financial processes and accounting.",
-    logo: "/images/aat.png",
-  },
-  {
-    id: 4,
-    degree: "Completed AAT Level I",
-    institution: "AAT Sri Lanka",
-    duration: "2019 Jan - 2019 Jul",
-    description: "Successfully completed AAT Level 1 in the July 2019 Examination in English Medium, gaining foundational knowledge in accounting principles, financial record-keeping, and basic business practices.",
-    logo: "/images/aat.png",
-  },
-  
-  {
-    id: 5,
-    degree: "O/L Examination",
-    institution: "JMC College International, Ratnapura",
-    duration: "2007 - 2018",
-    grade: "9 As",
-    description: "Successfully completed O/L examinations with a strong emphasis on core subjects including Mathematics, Science, English, and Information & Communication Technology along with diverse other subjects, building a solid academic foundation for further studies.",
-    logo: "/images/jmc.jpeg",
+    degree: "G.C.E. Advanced Level & Ordinary Level",
+    institution: "Sanghamiththa Balika Vidyalaya, Galle",
+    duration: "2008 – 2022",
+    description: (
+      <div className="text-gray-300 text-sm md:text-base leading-relaxed space-y-4">
+        <p>
+          I completed my G.C.E. Ordinary Level and Advanced Level examinations at{" "}
+          <span className="text-white font-semibold">
+            Sanghamiththa Balika Vidyalaya,
+          </span>{" "}
+          where I actively contributed to school life as a School Prefect, a member of the Senior Western Band.
+        </p>
+        <div>
+          <p>
+            Through these roles, I developed strong leadership, teamwork, and time-management skills while balancing academics and extracurricular activities, helping shape my confidence, responsibility, and overall personal growth.
+          </p>
+          
+        </div>
+      </div>
+    ),
+    logo: "/images/sbv.jfif",
   },
 ];
 
 export default function Education() {
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Reset refs array to match data length
-    itemRefs.current = itemRefs.current.slice(0, educationData.length);
+    if (!sectionRef.current) return;
 
-    itemRefs.current.forEach((ref) => {
-      if (ref) {
-        gsap.fromTo(
-          ref,
-          {
-            opacity: 0,
-            y: 100,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ref,
-              start: "top 90%",
-              end: "bottom 20%",
-              toggleActions: "play reverse play reverse",
-              scrub: 1,
-            },
-          }
-        );
+    gsap.fromTo(
+      sectionRef.current.querySelectorAll(".edu-card"),
+      { opacity: 0, y: 60 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        },
       }
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+    );
   }, []);
 
   return (
-    <section id="education" className="py-20 text-white relative">
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-[#08081f]/40 z-0 pointer-events-none"></div>
-      
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto px-4">
-        {/* Section Title */}
-        <h2 className="text-4xl font-bold mb-6 text-center text-[#80e0ff]">
-          Education
-        </h2>
-        <br />
+    <section
+      id="education"
+      ref={sectionRef}
+      className="relative py-20 pb-50 overflow-hidden"
+    >
+      {/* SAME BACKGROUND AS ABOUT */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/200 to-transparent" />
 
-        {/* Timeline Container */}
+      <div className="relative z-10 max-w-7xl mx-auto px-7">
+              {/* ================= HEADER ================= */}
+<div className="relative text-center mb-20 animate-fadeInUp">
+
+  {/* Decorative lines BEHIND the text */}
+  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-50 -z-8">
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+  </span>
+
+  {/* Main heading */}
+<h4
+  className={`
+    text-4xl md:text-3xl lg:text-4xl
+    font-extrabold tracking-wide
+    ${lora.className}
+  `}
+>
+  <span className="text-[#8B6FD6]">Education</span>{" "}
+  
+</h4>
+
+
+
+</div>
+
+        {/* TIMELINE */}
         <div className="relative">
-          {/* Vertical Line - Hidden on mobile, centered on desktop */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 bg-linear-to-b from-[#22addc] via-[#965acab9] to-transparent h-full"></div>
-          {/* Mobile vertical line on the left */}
-          <div className="md:hidden absolute left-6 w-1 bg-linear-to-b from-[#22addc] via-[#965acab9] to-transparent h-full"></div>
+          {/* CENTER LINE */}
+          <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-[3px] h-full bg-gradient-to-b from-[#8B6FD6] via-[#6a4fcf] to-transparent" />
 
-          {/* Education Items */}
-          {educationData.map((edu, index) => (
-            <div
-              key={edu.id}
-              ref={(el) => {
-                itemRefs.current[index] = el;
-              }}
-              className="relative mb-12"
-            >
-              {/* Desktop: Left Card (odd index), Mobile: All cards on right */}
-              {index % 2 === 0 ? (
-                <div className="flex items-start justify-between">
-                  {/* Card on Left (desktop) / Right (mobile) */}
-                  <div className="w-full md:w-[46%] pl-16 md:pl-0">
-                    <div className="bg-[#0f0f2f] border border-[#80e0ff30] rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-[0_0_20px_rgba(128,224,255,0.3)] transition-all duration-300">
-                      <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 relative shrink-0 bg-white rounded-full p-1.5 sm:p-2 overflow-hidden">
-                          <Image
-                            src={edu.logo}
-                            alt={edu.institution}
-                            fill
-                            className="object-contain rounded-full"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-xl font-bold text-white mb-1">
-                            {edu.degree}
-                          </h3>
-                          <p className="text-gray-400 text-xs sm:text-sm">{edu.institution}</p>
-                          {edu.duration && <p className="text-gray-500 text-xs mt-1">{edu.duration}</p>}
-                        </div>
-                      </div>
-                      {edu.grade && (
-                        <div className="mb-2 sm:mb-3">
-                          <span className="text-xs sm:text-sm text-gray-400">Grade: </span>
-                          <span className="text-[#80e0ff] font-semibold text-xs sm:text-base">{edu.grade}</span>
-                        </div>
-                      )}
-                      {edu.description && (
-                        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                          {edu.description}
-                        </p>
-                      )}
-                    </div>
+          {educationData.map((edu, index) => {
+            const isLeft = index % 2 === 0;
+
+            return (
+              <div key={edu.id} className="relative -mb-30 flex">
+                {/* LEFT CARD */}
+                {isLeft && (
+                  <div className="hidden md:block w-1/2 pr-14">
+                    <EduCard edu={edu} />
                   </div>
+                )}
 
-                  {/* Center Circle - adjusted for mobile */}
-                  <div className="absolute left-6 md:left-1/2 transform -translate-x-1/2 top-6 sm:top-8 w-8 h-8 sm:w-12 sm:h-12 bg-[#0a0a1f] border-2 sm:border-4 border-[#80e0ff] rounded-full flex items-center justify-center z-10">
-                    <div className="w-2 h-2 sm:w-4 sm:h-4 bg-linear-to-b from-[#22addc] to-[#965acab9] rounded-full animate-pulse"></div>
-                  </div>
-
-                  {/* Empty Space on Right (desktop only) */}
-                  <div className="hidden md:block w-[46%]"></div>
-                </div>
-              ) : (
-                /* Right Card (even index on desktop), Mobile: All cards on right */
-                <div className="flex items-start justify-between">
-                  {/* Empty Space on Left (desktop only) */}
-                  <div className="hidden md:block w-[46%]"></div>
-
-                  {/* Center Circle - adjusted for mobile */}
-                  <div className="absolute left-6 md:left-1/2 transform -translate-x-1/2 top-6 sm:top-8 w-8 h-8 sm:w-12 sm:h-12 bg-[#0a0a1f] border-2 sm:border-4 border-[#80e0ff] rounded-full flex items-center justify-center z-10">
-                    <div className="w-2 h-2 sm:w-4 sm:h-4 bg-linear-to-b from-[#22addc] to-[#965acab9] rounded-full animate-pulse"></div>
-                  </div>
-
-                  {/* Card on Right */}
-                  <div className="w-full md:w-[46%] pl-16 md:pl-0">
-                    <div className="bg-[#0f0f2f] border border-[#80e0ff30] rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-[0_0_20px_rgba(128,224,255,0.3)] transition-all duration-300">
-                      <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="w-12 h-12 sm:w-16 sm:h-16 relative shrink-0 bg-white rounded-full p-1.5 sm:p-2 overflow-hidden">
-                          <Image
-                            src={edu.logo}
-                            alt={edu.institution}
-                            fill
-                            className="object-contain rounded-full"
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-xl font-bold text-white mb-1">
-                            {edu.degree}
-                          </h3>
-                          <p className="text-gray-400 text-xs sm:text-sm">{edu.institution}</p>
-                          {edu.duration && <p className="text-gray-500 text-xs mt-1">{edu.duration}</p>}
-                        </div>
-                      </div>
-                      {edu.grade && (
-                        <div className="mb-2 sm:mb-3">
-                          <span className="text-xs sm:text-sm text-gray-400">Grade: </span>
-                          <span className="text-[#80e0ff] font-semibold text-xs sm:text-base">{edu.grade}</span>
-                        </div>
-                      )}
-                      {edu.description && (
-                        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                          {edu.description}
-                        </p>
-                      )}
-                    </div>
+                {/* CENTER NODE */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-9 z-10">
+                  <div className="w-12 h-12 rounded-full border-4 border-[#8B6FD6] bg-[#0a0a1f] flex items-center justify-center shadow-[0_0_30px_rgba(139,111,214,0.9)]">
+                    <div className="w-3 h-3 bg-[#8B6FD6] rounded-full animate-pulse" />
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
+
+                {/* RIGHT CARD */}
+                {!isLeft && (
+                  <div className="hidden md:block w-1/2 pl-14 ml-auto">
+                    <EduCard edu={edu} />
+                  </div>
+                )}
+
+                {/* MOBILE */}
+                <div className="md:hidden w-full pl-16">
+                  <EduCard edu={edu} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-      </div>
     </section>
+  );
+}
+
+/* ================= CARD ================= */
+
+function EduCard({ edu }: { edu: Education }) {
+  return (
+    <div
+      className="
+        edu-card
+        bg-[#1b1538]/70
+        border border-[#8B6FD6]/30
+        rounded-2xl p-6
+        shadow-lg
+        transition-all duration-300
+        hover:-translate-y-2 hover:scale-[1.04]
+        hover:shadow-[0_0_40px_rgba(139,111,214,0.7)]
+      "
+    >
+      <div className="flex gap-4 mb-4">
+        <div className="w-14 h-14 relative bg-white rounded-full p-2">
+          <Image
+            src={edu.logo}
+            alt={edu.institution}
+            fill
+            className="object-contain"
+          />
+        </div>
+        <div>
+          <h3 className="text-lg font-bold text-white">{edu.degree}</h3>
+          <p className="text-gray-400 text-sm">{edu.institution}</p>
+          {edu.duration && (
+            <p className="text-gray-500 text-xs">{edu.duration}</p>
+          )}
+        </div>
+      </div>
+
+      {edu.grade && (
+        <p className="text-sm mb-2">
+          <span className="text-gray-400">Grade: </span>
+          <span className="text-[#8B6FD6] font-semibold">{edu.grade}</span>
+        </p>
+      )}
+
+      {/* ✅ JSX SAFE RENDER */}
+      {edu.description && <div>{edu.description}</div>}
+    </div>
   );
 }

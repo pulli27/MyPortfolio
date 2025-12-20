@@ -88,12 +88,16 @@ const About = () => {
               "
             >
               <Image
-                src="/images/profile1.jpg"
-                alt="Pulmi Vihansa"
-                fill
-                priority
-                className="object-cover object-top transition-transform duration-500 hover:scale-105"
-              />
+                  src="/images/p.jpeg"
+                  alt="Pulmi Vihansa"
+                  fill
+                  priority
+                  className="object-cover scale-100"
+                  style={{
+                    objectPosition: "center 15%", // 👈 moves image DOWN slightly
+                  }}
+                />
+              
             </div>
           </div>
 
