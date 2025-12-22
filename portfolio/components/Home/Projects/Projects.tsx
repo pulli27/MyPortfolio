@@ -26,7 +26,7 @@ const projects: Project[] = [
       "A full-stack bag-selling e-commerce system featuring authentication, customization, real-time stock updates, secure checkout, and admin dashboards.",
     technologies: ["React", "Node.js", "MongoDB", "Express"],
     github: "https://github.com/pulli27/PackPal",
-    image: "/images/packpall.jpg",
+    image: "/images/packpal.jpg",
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ const projects: Project[] = [
       "A wellness mobile app for habit tracking, mood journaling, hydration reminders, and progress insights.",
     technologies: ["Kotlin", "SharedPreferences", "Android Studio"],
     github: "https://github.com/pulli27/ZenTrack-Daily-Habit-Tracker",
-    image: "/images/zentrac.png",
+    image: "/images/zentrack.png",
   },
   {
     id: 3,

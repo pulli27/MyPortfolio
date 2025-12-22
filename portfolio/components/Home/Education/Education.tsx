@@ -62,7 +62,7 @@ const educationData: Education[] = [
         </p>
       </div>
     ),
-    logo: "/images/sliit.jfif",
+    logo: "/images/sliit.jpg",
   },
   {
     id: 2,
@@ -86,7 +86,7 @@ const educationData: Education[] = [
         </p>
       </div>
     ),
-    logo: "/images/sbv.jfif",
+    logo: "/images/sbv.jpg",
   },
 ];
 
