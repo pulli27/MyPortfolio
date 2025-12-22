@@ -69,7 +69,7 @@ const skills: SkillGroup[] = [
     items: [
       { name: "Java", logo: "/logos/java.png" },
       { name: "Python", logo: "/logos/python.png" },
-      { name: "C", logo: "/logos/c.png" },
+      { name: "C", logo: "/logos/clogo.png" },
       { name: "C#", logo: "/logos/csharp.png" },
       { name: "C++", logo: "/logos/c++.png" },
       { name: "Php", logo: "/logos/php.png" },
