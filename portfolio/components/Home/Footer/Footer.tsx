@@ -1,9 +1,11 @@
 "use client";
 
-import React from "react";
-import { FaGithub, FaLinkedin, FaHeart } from "react-icons/fa";
+import React, { useEffect, useRef } from "react";
+import { FaGithub, FaLinkedin, FaCode } from "react-icons/fa";
+import { gsap } from "gsap";
 
 export default function Footer() {
+  const footerRef = useRef<HTMLDivElement | null>(null);
   const currentYear = new Date().getFullYear();
 
   const navLinks = [
@@ -27,45 +29,75 @@ export default function Footer() {
     },
   ];
 
+  /* ================= GSAP ANIMATION ================= */
+  useEffect(() => {
+    if (!footerRef.current) return;
+
+    gsap.fromTo(
+      footerRef.current.children,
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.15,
+      }
+    );
+  }, []);
+
   return (
-    
-    <footer className="relative border-t border-white/5">
-      
+    <footer
+      ref={footerRef}
+      className="relative border-t border-white/5 overflow-hidden"
+    >
       {/* Background same as NAV */}
       <div className="absolute inset-0 bg-[#262525]/90 backdrop-blur-md z-0" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-10">
-        
-        {/* Navigation Links */}
+        {/* ================= NAV LINKS ================= */}
         <div className="flex justify-center mb-6">
-          <nav className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-            {navLinks.map((link, index) => (
-              <a
-                key={index}
-                href={link.href}
-                className="relative text-sm font-medium text-white transition-colors duration-300 group hover:text-[#8B6FD6]"
-              >
-                {link.name}
+  <nav className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+    {navLinks.map((link, index) => (
+      <a
+        key={index}
+        href={link.href}
+        className="
+          relative
+          text-sm                /* Mobile */
+          md:text-[15px]         /* Tablet */
+          lg:text-lg             /* Desktop ONLY */
+          font-medium
+          text-white
+          transition-colors duration-300
+          group
+          hover:text-[#8B6FD6]
+        "
+      >
+        {link.name}
 
-                {/* Gradient underline (same as nav) */}
-                <span
-                  className="
-                    absolute left-0 -bottom-1 h-[2px] w-full
-                    bg-[linear-gradient(90deg,#6D4AA8,#8B6FD6,#B79CED)]
-                    scale-x-0 group-hover:scale-x-100
-                    transition-transform duration-300 origin-left
-                  "
-                />
-              </a>
-            ))}
-          </nav>
-        </div>
+        {/* Purple underline animation */}
+        <span
+          className="
+            absolute left-0 -bottom-1
+            h-[2px] w-full
+            bg-[linear-gradient(90deg,#6D4AA8,#8B6FD6,#B79CED)]
+            scale-x-0 group-hover:scale-x-100
+            transition-transform duration-300
+            origin-left
+          "
+        />
+      </a>
+    ))}
+  </nav>
+</div>
+
 
         {/* Divider */}
-        <div className="w-[70%] mx-auto h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/900 to-transparent mb-6" />
+        <div className="w-[90%] mx-auto h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/800 to-transparent mb-6" />
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          
+        {/* ================= BOTTOM CONTENT ================= */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left */}
           <div className="text-gray-400 text-sm text-center md:text-left">
             © {currentYear} Pulmi Vihansa. All Rights Reserved.
@@ -81,7 +113,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 aria-label={social.label}
                 className="
-                  w-9 h-9 rounded-full
+                  w-10 h-10 rounded-full
                   bg-white/10
                   flex items-center justify-center
                   border border-white/10
@@ -90,6 +122,7 @@ export default function Footer() {
                   hover:bg-[#8B6FD6]
                   hover:border-[#8B6FD6]
                   hover:scale-110
+                  hover:shadow-[0_0_20px_rgba(139,111,214,0.6)]
                 "
               >
                 <social.icon className="w-4 h-4" />
@@ -97,11 +130,27 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* Right */}
-          <div className="text-gray-400 text-sm flex items-center gap-1.5">
-            <span>Designed by</span>
-            <FaHeart className="w-3.5 h-3.5 text-[#8B6FD6] animate-pulse" />
-            <span>by Pulmi</span>
+          {/* RIGHT BRAND */}
+          <div className="flex items-center gap-3 text-gray-300">
+            <span
+              className="
+                w-10 h-10 rounded-full
+                flex items-center justify-center
+                bg-[linear-gradient(135deg,#6D4AA8,#8B6FD6,#B79CED)]
+                shadow-[0_0_25px_rgba(139,111,214,0.7)]
+              "
+            >
+              <FaCode className="text-white" />
+            </span>
+
+            <div className="text-left">
+              <p className="text-white font-medium">
+                Designed by <span className="text-[#8B6FD6]">Pulmi</span>
+              </p>
+              <p className="text-xs text-gray-400">
+                Data Science Undergraduate | Sri Lanka
+              </p>
+            </div>
           </div>
         </div>
       </div>

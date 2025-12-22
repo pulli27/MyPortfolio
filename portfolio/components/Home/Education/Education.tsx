@@ -19,7 +19,7 @@ interface Education {
   institution: string;
   duration?: string;
   grade?: string;
-  description?: React.ReactNode; // ✅ FIXED
+  description?: React.ReactNode;
   logo: string;
 }
 
@@ -40,17 +40,25 @@ const educationData: Education[] = [
           <span className="text-[#8B6FD6] font-semibold">Data Science</span>,
           with a strong passion for building modern, user-focused digital solutions.
         </p>
-        <div>
-          <p>
-            Through academic coursework, project-based learning, and extracurricular activities, I have developed a solid foundation in software development, problem-solving, and system design. 
-            I have hands-on experience in developing responsive <span className="text-white font-semibold mb-2">web and mobile applications, working with databases and APIs, and applying UI/UX </span>best practices to create intuitive user experiences.
-          </p>
-          
-        </div>
 
         <p>
-         In addition to technical skills, I bring strong <span className="text-white font-semibold mb-2">teamwork, adaptability, and communication abilities. </span>
-         I am highly motivated, eager to learn, and committed to contributing to innovative and impactful digital solutions.
+          Through academic coursework, project-based learning, and extracurricular
+          activities, I have developed a solid foundation in software development,
+          problem-solving, and system design. I have hands-on experience in developing
+          responsive{" "}
+          <span className="text-white font-semibold">
+            web and mobile applications, working with databases and APIs, and applying
+            UI/UX
+          </span>{" "}
+          best practices.
+        </p>
+
+        <p>
+          In addition to technical skills, I bring strong{" "}
+          <span className="text-white font-semibold">
+            teamwork, adaptability, and communication abilities.
+          </span>{" "}
+          I am highly motivated and eager to learn.
         </p>
       </div>
     ),
@@ -66,16 +74,16 @@ const educationData: Education[] = [
         <p>
           I completed my G.C.E. Ordinary Level and Advanced Level examinations at{" "}
           <span className="text-white font-semibold">
-            Sanghamiththa Balika Vidyalaya,
-          </span>{" "}
-          where I actively contributed to school life as a School Prefect, a member of the Senior Western Band.
+            Sanghamiththa Balika Vidyalaya
+          </span>
+          , where I actively contributed as a School Prefect and Senior Western Band
+          member.
         </p>
-        <div>
-          <p>
-            Through these roles, I developed strong leadership, teamwork, and time-management skills while balancing academics and extracurricular activities, helping shape my confidence, responsibility, and overall personal growth.
-          </p>
-          
-        </div>
+
+        <p>
+          These experiences strengthened my leadership, teamwork, and time-management
+          skills while shaping my confidence and responsibility.
+        </p>
       </div>
     ),
     logo: "/images/sbv.jfif",
@@ -109,71 +117,85 @@ export default function Education() {
     <section
       id="education"
       ref={sectionRef}
-      className="relative py-20 pb-50 overflow-hidden"
+      className="relative pt-20 pb-40 overflow-hidden"
     >
-      {/* SAME BACKGROUND AS ABOUT */}
+      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40 pointer-events-none" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/200 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/900 to-transparent" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-7">
-              {/* ================= HEADER ================= */}
-<div className="relative text-center mb-20 animate-fadeInUp">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* ================= HEADER ================= */}
+        <div className="relative text-center mb-20">
+          <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-50 -z-10">
+            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+          </span>
 
-  {/* Decorative lines BEHIND the text */}
-  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-50 -z-8">
-    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-  </span>
-
-  {/* Main heading */}
-<h4
-  className={`
-    text-4xl md:text-3xl lg:text-4xl
-    font-extrabold tracking-wide
-    ${lora.className}
-  `}
->
-  <span className="text-[#8B6FD6]">Education</span>{" "}
-  
-</h4>
+          <h4
+            className={`text-4xl md:text-3xl lg:text-4xl font-extrabold tracking-wide ${lora.className}`}
+          >
+            <span className="text-[#8B6FD6]">Education</span>{" "}
+            
+          </h4>
+        </div>
 
 
-
-</div>
-
-        {/* TIMELINE */}
+        {/* Timeline */}
         <div className="relative">
-          {/* CENTER LINE */}
-          <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-[3px] h-full bg-gradient-to-b from-[#8B6FD6] via-[#6a4fcf] to-transparent" />
+          {/* Timeline Line */}
+          <div
+            className="
+              absolute
+              left-5 md:left-1/2
+              md:-translate-x-1/2
+              w-[3px]
+              h-full
+              bg-gradient-to-b
+              from-[#8B6FD6]
+              via-[#6a4fcf]
+              to-transparent
+            "
+          />
 
           {educationData.map((edu, index) => {
             const isLeft = index % 2 === 0;
 
             return (
-              <div key={edu.id} className="relative -mb-30 flex">
-                {/* LEFT CARD */}
+              <div
+                key={edu.id}
+                className="relative mb-16 md:-mb-25 flex"
+              >
+                {/* LEFT CARD (DESKTOP) */}
                 {isLeft && (
                   <div className="hidden md:block w-1/2 pr-14">
                     <EduCard edu={edu} />
                   </div>
                 )}
 
-                {/* CENTER NODE */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-9 z-10">
+                {/* NODE */}
+                <div
+                  className="
+                    absolute
+                    -left-1 md:left-1/2
+                    md:-translate-x-1/2
+                    top-9
+                    z-10
+                  "
+                >
                   <div className="w-12 h-12 rounded-full border-4 border-[#8B6FD6] bg-[#0a0a1f] flex items-center justify-center shadow-[0_0_30px_rgba(139,111,214,0.9)]">
                     <div className="w-3 h-3 bg-[#8B6FD6] rounded-full animate-pulse" />
                   </div>
                 </div>
 
-                {/* RIGHT CARD */}
+                {/* RIGHT CARD (DESKTOP) */}
                 {!isLeft && (
                   <div className="hidden md:block w-1/2 pl-14 ml-auto">
                     <EduCard edu={edu} />
                   </div>
                 )}
 
-                {/* MOBILE */}
-                <div className="md:hidden w-full pl-16">
+                {/* MOBILE CARD */}
+                <div className="md:hidden w-full pl-12">
                   <EduCard edu={edu} />
                 </div>
               </div>
@@ -210,6 +232,7 @@ function EduCard({ edu }: { edu: Education }) {
             className="object-contain"
           />
         </div>
+
         <div>
           <h3 className="text-lg font-bold text-white">{edu.degree}</h3>
           <p className="text-gray-400 text-sm">{edu.institution}</p>
@@ -226,7 +249,6 @@ function EduCard({ edu }: { edu: Education }) {
         </p>
       )}
 
-      {/* ✅ JSX SAFE RENDER */}
       {edu.description && <div>{edu.description}</div>}
     </div>
   );

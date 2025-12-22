@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+
 import ResponsiveNav from "../components/Home/Navbar/ResponsiveNav";
+import ScrollToTop from "../components/ScrollToTop"; // ✅ ADD THIS
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,6 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${outfit.className} antialiased`}>
         <ResponsiveNav />
+        <ScrollToTop /> {/* ✅ WORKS NOW */}
         {children}
         <ToastContainer theme="dark" />
       </body>

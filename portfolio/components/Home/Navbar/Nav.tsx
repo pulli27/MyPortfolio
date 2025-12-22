@@ -11,26 +11,50 @@ type Props = {
 
 const Nav = ({ openNav }: Props) => {
   const [navBg, setNavBg] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("");
+  const [activeSection, setActiveSection] = useState<string>("home");
 
-  /* Navbar background on scroll */
+  /* ================= NAV BACKGROUND ON SCROLL ================= */
   useEffect(() => {
     const handler = () => {
-      if (window.scrollY >= 90) setNavBg(true);
-      else setNavBg(false);
+      setNavBg(window.scrollY >= 90);
     };
 
     window.addEventListener("scroll", handler);
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  /* Smooth scroll + active section */
+  /* ================= FIXED SCROLL SPY ================= */
+  useEffect(() => {
+    const sections = NavLinks
+      .map(link => document.getElementById(link.url.replace("#", "")))
+      .filter((el): el is HTMLElement => el !== null);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "-40% 0px -50% 0px", // ⭐ KEY FIX
+        threshold: 0,
+      }
+    );
+
+    sections.forEach(section => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
+  /* ================= SMOOTH SCROLL ================= */
   const handleSmoothScroll = (
     e: React.MouseEvent<HTMLAnchorElement>,
     url: string
   ) => {
     e.preventDefault();
-
     const targetId = url.replace("#", "");
     const targetElement = document.getElementById(targetId);
 
@@ -54,29 +78,21 @@ const Nav = ({ openNav }: Props) => {
       `}
     >
       <div className="flex items-center h-full w-[90%] mx-auto">
-        {/* Logo */}
+
+        {/* ================= LOGO ================= */}
         <div className="flex items-center space-x-2 pl-3 md:pl-6 lg:pl-20">
-  {/* Logo Circle */}
-  <div
-    className="
-      w-9 h-9
-      rounded-full
-      flex items-center justify-center
-      bg-[linear-gradient(135deg,#6D4AA8,#8B6FD6,#B79CED)]
-      shadow-[0_0_15px_rgba(139,111,214,0.45)]
-    "
-  >
-    <FaCode className="w-4 h-4 text-white" />
-  </div>
+          <div className="w-9 h-9 rounded-full flex items-center justify-center
+            bg-[linear-gradient(135deg,#6D4AA8,#8B6FD6,#B79CED)]
+            shadow-[0_0_15px_rgba(139,111,214,0.45)]
+          ">
+            <FaCode className="w-4 h-4 text-white" />
+          </div>
+          <h1 className="text-lg md:text-xl lg:text-2xl text-white font-bold">
+            Pulmi Vihansa
+          </h1>
+        </div>
 
-  {/* Name */}
-  <h1 className="text-lg md:text-xl lg:text-2xl text-white font-bold">
-    Pulmi Vihansa
-  </h1>
-</div>
-
-
-        {/* Desktop Nav Links */}
+        {/* ================= DESKTOP NAV ================= */}
         <div className="hidden md:flex items-center space-x-4 lg:space-x-10 flex-1 justify-center">
           {NavLinks.map((link) => {
             const sectionId = link.url.replace("#", "");
@@ -88,10 +104,8 @@ const Nav = ({ openNav }: Props) => {
                 onClick={(e) => handleSmoothScroll(e, link.url)}
                 className="relative group whitespace-nowrap"
               >
-                {/* Nav text */}
                 <span
-                  className={`
-                    text-sm lg:text-base font-medium transition-colors duration-300
+                  className={`text-sm lg:text-base font-medium transition-colors duration-300
                     ${
                       activeSection === sectionId
                         ? "text-[#8B6FD6]"
@@ -102,12 +116,11 @@ const Nav = ({ openNav }: Props) => {
                   {link.Label}
                 </span>
 
-                {/* Gradient underline */}
+                {/* UNDERLINE */}
                 <span
-                  className={`
-                    absolute left-0 -bottom-1 h-[2px] w-full rounded-full
+                  className={`absolute left-0 -bottom-1 h-[2px] w-full rounded-full
                     bg-[linear-gradient(90deg,#6D4AA8,#8B6FD6,#B79CED)]
-                    transform origin-left transition-transform duration-300
+                    transition-transform duration-300 origin-left
                     ${
                       activeSection === sectionId
                         ? "scale-x-100"
@@ -120,28 +133,30 @@ const Nav = ({ openNav }: Props) => {
           })}
         </div>
 
-        {/* Social Icons */}
+        {/* ================= SOCIAL ICONS ================= */}
         <div className="hidden md:flex items-center space-x-3 pr-3 md:pr-6 lg:pr-20">
           <a
             href="https://github.com/pulli27"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#8B6FD6] transition-all duration-300 flex items-center justify-center hover:scale-110"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#8B6FD6]
+              transition-all duration-300 flex items-center justify-center hover:scale-110"
           >
-            <FaGithub className="w-4 h-4 text-white" />
+            <FaGithub className="w-5 h-5 text-white" />
           </a>
 
           <a
             href="https://www.linkedin.com/in/pulmi-vihansa-4450872a3/"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-[#8B6FD6] transition-all duration-300 flex items-center justify-center hover:scale-110"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-[#8B6FD6]
+              transition-all duration-300 flex items-center justify-center hover:scale-110"
           >
-            <FaLinkedin className="w-4 h-4 text-white" />
+            <FaLinkedin className="w-5 h-5 text-white" />
           </a>
         </div>
 
-        {/* Mobile Menu Icon */}
+        {/* ================= MOBILE ICON ================= */}
         <div className="flex md:hidden items-center justify-end flex-1 pr-4">
           <HiBars3BottomRight
             onClick={openNav}

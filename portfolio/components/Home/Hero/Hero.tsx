@@ -121,18 +121,32 @@ const Hero = () => {
               </h2>
 
               {/* Description */}
-              <p className="mt-6 text-gray-300 text-base sm:text-lg leading-relaxed max-w-xl">
-                I’m a dedicated full-stack developer with a strong focus on backend engineering and building scalable, high-performance systems. I enjoy crafting modern web applications with clean user experiences, using current technologies to deliver reliable and efficient solutions.
-                </p>
+              <div className="px-6 sm:px-8 md:px-0 ">
+  <p className="
+  mt-6 
+  text-gray-300 
+  text-base sm:text-lg 
+  leading-relaxed 
+  max-w-xl 
+  mx-auto
+  text-justify
+">
+  I’m a dedicated full-stack developer with a strong focus on backend engineering and building scalable,
+  high-performance systems. I enjoy crafting modern web applications with clean user experiences,
+  using current technologies to deliver reliable and efficient solutions.
+</p>
+
+</div>
               {/* Download CV Button */}
-              <a 
-                href="https://drive.google.com/file/d/1KsiX3dMQeWSNFTaXm_k0XbKyBCb19kSd/view?usp=sharing" 
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 px-8 py-4 bg-linear-to-r from-purple-900 to-blue-800 hover:from-purple-700 hover:to-blue-700 active:from-purple-700 active:to-blue-700 rounded-full text-white font-semibold text-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 hover:scale-105 active:scale-105"
-              >
-                Download CV
-              </a>
+<a
+  href="/images/Pulmi_Vihansa_CV.pdf" 
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-8 px-8 py-4 bg-linear-to-r from-purple-900 to-blue-800 hover:from-purple-700 hover:to-blue-700 active:from-purple-700 active:to-blue-700 rounded-full text-white font-semibold text-lg shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-all duration-300 hover:scale-105 active:scale-105"
+>
+  Download CV
+</a>
+
             </div>
 
     {/* Image Circle - Right Side */}

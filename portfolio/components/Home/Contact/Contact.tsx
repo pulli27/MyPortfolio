@@ -1,21 +1,21 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { Lora } from "next/font/google";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { MapPin, Mail, Linkedin, Github } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const lora = Lora({
   subsets: ["latin"],
   weight: ["600", "700"],
 });
 
-import { useState } from "react";
-import {
-  MapPin,
-  Mail,
-  Linkedin,
-  Github,
-} from "lucide-react";
-
 export default function Contact() {
+  const infoRef = useRef<HTMLDivElement | null>(null);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -24,19 +24,43 @@ export default function Contact() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState<"success" | "error" | null>(null);
 
-  const handleChange = (e) => {
+  /* ================= GSAP ANIMATION ================= */
+  useEffect(() => {
+    if (!infoRef.current) return;
+
+    gsap.fromTo(
+      infoRef.current.children,
+      { opacity: 0, y: 40 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        stagger: 0.25,
+        scrollTrigger: {
+          trigger: infoRef.current,
+          start: "top 80%",
+        },
+      }
+    );
+  }, []);
+
+  /* ================= HANDLERS ================= */
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
 
     try {
-      const res = await fetch("https://formspree.io/f/xzznnjan", {
+      const res = await fetch("https://formspree.io/f/mjgbewyk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, _replyto: form.email }),
@@ -53,52 +77,37 @@ export default function Contact() {
   };
 
   return (
-    <section
-  id="contact"
-  className="relative py-20 overflow-hidden"
->
-  <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40" />
-  <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/300 to-transparent" />
-
+    <section id="contact" className="relative py-20 overflow-hidden">
+      {/* SAME BACKGROUND AS EDUCATION */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40" />
+      <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/50 to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* ================= HEADER ================= */}
-<div className="relative text-center mb-20 animate-fadeInUp">
+        <div className="relative text-center mb-20">
+          <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-55 -z-10">
+            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+          </span>
 
-  {/* Decorative lines BEHIND the text */}
-  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-57 -z-8">
-    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-  </span>
+          <h4
+            className={`text-4xl md:text-3xl lg:text-4xl font-extrabold tracking-wide ${lora.className}`}
+          >
+            <span className="text-[#8B6FD6]">Contact</span>{" "}
+            <span className="text-white">Me</span>
+          </h4>
+        </div>
 
-  {/* Main heading */}
-<h4
-  className={`
-    text-4xl md:text-3xl lg:text-4xl
-    font-extrabold tracking-wide
-    ${lora.className}
-  `}
->
-  <span className="text-[#8B6FD6]">Contact</span>{" "}
-  <span className="text-white">Me</span>
-</h4>
-
-
-
-</div>
-
-        {/* GRID */}
+        {/* ================= GRID ================= */}
         <div className="grid md:grid-cols-2 gap-16">
-          {/* LEFT INFO GRID */}
-          <div className="space-y-8">
-            {/* LOCATION */}
+          {/* LEFT INFO */}
+          <div ref={infoRef} className="space-y-8">
             <InfoCard
               icon={<MapPin />}
               title="Location"
               content="Sri Lanka"
             />
 
-            {/* EMAIL */}
             <InfoCard
               icon={<Mail />}
               title="Email"
@@ -112,8 +121,7 @@ export default function Contact() {
               }
             />
 
-            {/* SOCIAL */}
-            <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
+            <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,111,214,0.35)]">
               <h3 className="text-sm uppercase tracking-wide text-gray-400 mb-4">
                 Follow Me
               </h3>
@@ -136,9 +144,7 @@ export default function Contact() {
             className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-8 space-y-6"
           >
             <div>
-              <h3 className="text-2xl font-bold text-white">
-                Send a Message
-              </h3>
+              <h3 className="text-2xl font-bold text-white">Send a Message</h3>
               <p className="text-gray-400 text-sm mt-1">
                 Fill out the form below and I’ll get back to you
               </p>
@@ -204,9 +210,17 @@ export default function Contact() {
 
 /* ================= COMPONENTS ================= */
 
-function InfoCard({ icon, title, content }) {
+function InfoCard({
+  icon,
+  title,
+  content,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  content: React.ReactNode;
+}) {
   return (
-    <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
+    <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,111,214,0.35)]">
       <div className="flex items-center gap-3 mb-2 text-[#8B6FD6]">
         {icon}
         <h3 className="text-sm uppercase tracking-wide text-gray-400">
@@ -218,7 +232,13 @@ function InfoCard({ icon, title, content }) {
   );
 }
 
-function SocialIcon({ href, icon }) {
+function SocialIcon({
+  href,
+  icon,
+}: {
+  href: string;
+  icon: React.ReactNode;
+}) {
   return (
     <a
       href={href}
@@ -230,7 +250,7 @@ function SocialIcon({ href, icon }) {
   );
 }
 
-function Input(props) {
+function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
       {...props}
