@@ -80,7 +80,7 @@ const projects: Project[] = [
       "A modern portfolio showcasing projects, skills, and animations.",
     technologies: ["React", "TypeScript", "CSS"],
     github: "https://github.com/pulli27/MyPortfolio",
-    live: "https://pulli27.github.io/MyPortfolio/",
+    live: "https://pulmivihansa-portfolio.vercel.app/",
     image: "/images/port.png",
   },
 ];
