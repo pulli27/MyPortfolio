@@ -3,7 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 
 import ResponsiveNav from "../components/Home/Navbar/ResponsiveNav";
-import ScrollToTop from "../components/ScrollToTop"; // ✅ ADD THIS
+import ScrollToTop from "../components/ScrollToTop"; 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,6 +16,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Pulmi Vihansa",
   description: "Portfolio Website",
+  icons: {
+    icon: '/images/logo.jpg',
+  },
 };
 
 export default function RootLayout({
