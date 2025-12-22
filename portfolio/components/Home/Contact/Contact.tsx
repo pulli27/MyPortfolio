@@ -5,6 +5,7 @@ import { Lora } from "next/font/google";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MapPin, Mail, Linkedin, Github } from "lucide-react";
+import confetti from "canvas-confetti"; // ✅ NEW
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -47,6 +48,16 @@ export default function Contact() {
     );
   }, []);
 
+  /* ================= CONFETTI ================= */
+  const fireConfetti = () => {
+    confetti({
+      particleCount: 120,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ["#8B6FD6", "#6a4fcf", "#ffffff"],
+    });
+  };
+
   /* ================= HANDLERS ================= */
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -67,8 +78,11 @@ export default function Contact() {
       });
 
       if (!res.ok) throw new Error();
+
       setStatus("success");
       setForm({ name: "", email: "", subject: "", message: "" });
+
+      fireConfetti(); // 🎉 CELEBRATION
     } catch {
       setStatus("error");
     } finally {
@@ -78,35 +92,40 @@ export default function Contact() {
 
   return (
     <section id="contact" className="relative py-20 overflow-hidden">
-      {/* SAME BACKGROUND AS EDUCATION */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/40" />
       <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-[#8B6FD6]/50 to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* ================= HEADER ================= */}
-        <div className="relative text-center mb-20">
-          <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-55 -z-10">
-            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-            <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
-          </span>
+<div className="relative text-center mb-20 animate-fadeInUp">
 
-          <h4
-            className={`text-4xl md:text-3xl lg:text-4xl font-extrabold tracking-wide ${lora.className}`}
-          >
-            <span className="text-[#8B6FD6]">Contact</span>{" "}
-            <span className="text-white">Me</span>
-          </h4>
-        </div>
+  {/* Decorative lines BEHIND the text */}
+  <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-center gap-60 -z-8">
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+    <span className="w-9 h-[4px] bg-[#8B6FD6]/40" />
+  </span>
+
+  {/* Main heading */}
+<h4
+  className={`
+    text-4xl md:text-3xl lg:text-4xl
+    font-extrabold tracking-wide
+    ${lora.className}
+  `}
+>
+  <span className="text-[#8B6FD6]">Contact </span>{" "}
+  <span className="text-white">Me</span>
+</h4>
+
+
+
+</div>
 
         {/* ================= GRID ================= */}
         <div className="grid md:grid-cols-2 gap-16">
           {/* LEFT INFO */}
           <div ref={infoRef} className="space-y-8">
-            <InfoCard
-              icon={<MapPin />}
-              title="Location"
-              content="Sri Lanka"
-            />
+            <InfoCard icon={<MapPin />} title="Location" content="Sri Lanka" />
 
             <InfoCard
               icon={<Mail />}
@@ -121,7 +140,7 @@ export default function Contact() {
               }
             />
 
-            <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,111,214,0.35)]">
+            <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
               <h3 className="text-sm uppercase tracking-wide text-gray-400 mb-4">
                 Follow Me
               </h3>
@@ -143,35 +162,14 @@ export default function Contact() {
             onSubmit={handleSubmit}
             className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-8 space-y-6"
           >
-            <div>
-              <h3 className="text-2xl font-bold text-white">Send a Message</h3>
-              <p className="text-gray-400 text-sm mt-1">
-                Fill out the form below and I’ll get back to you
-              </p>
-            </div>
+            <h3 className="text-2xl font-bold text-white">Send a Message</h3>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <Input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Your Name"
-              />
-              <Input
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Your Email"
-              />
+              <Input name="name" value={form.name} onChange={handleChange} placeholder="Your Name" />
+              <Input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Your Email" />
             </div>
 
-            <Input
-              name="subject"
-              value={form.subject}
-              onChange={handleChange}
-              placeholder="Subject"
-            />
+            <Input name="subject" value={form.subject} onChange={handleChange} placeholder="Subject" />
 
             <textarea
               name="message"
@@ -179,23 +177,24 @@ export default function Contact() {
               onChange={handleChange}
               rows={5}
               placeholder="Tell me about your project..."
-              className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none focus:border-[#8B6FD6]"
+              className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none"
               required
             />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#8B6FD6] to-[#6a4fcf] hover:opacity-90 transition"
+              className="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#8B6FD6] to-[#6a4fcf]"
             >
               {loading ? "Sending..." : "Send Message"}
             </button>
 
             {status === "success" && (
               <p className="text-green-400 text-sm">
-                Message sent successfully!
+                🎉 Message sent successfully!
               </p>
             )}
+
             {status === "error" && (
               <p className="text-red-400 text-sm">
                 Something went wrong. Please try again.
@@ -210,17 +209,9 @@ export default function Contact() {
 
 /* ================= COMPONENTS ================= */
 
-function InfoCard({
-  icon,
-  title,
-  content,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  content: React.ReactNode;
-}) {
+function InfoCard({ icon, title, content }: any) {
   return (
-    <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(139,111,214,0.35)]">
+    <div className="bg-[#1b1538]/70 border border-[#8B6FD6]/30 rounded-2xl p-6">
       <div className="flex items-center gap-3 mb-2 text-[#8B6FD6]">
         {icon}
         <h3 className="text-sm uppercase tracking-wide text-gray-400">
@@ -232,13 +223,7 @@ function InfoCard({
   );
 }
 
-function SocialIcon({
-  href,
-  icon,
-}: {
-  href: string;
-  icon: React.ReactNode;
-}) {
+function SocialIcon({ href, icon }: any) {
   return (
     <a
       href={href}
@@ -255,7 +240,7 @@ function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
     <input
       {...props}
       required
-      className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none focus:border-[#8B6FD6]"
+      className="w-full px-4 py-3 rounded-xl bg-[#0a0a1f] border border-[#8B6FD6]/30 text-white focus:outline-none"
     />
   );
 }
