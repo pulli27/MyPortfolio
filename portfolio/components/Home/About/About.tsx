@@ -120,7 +120,7 @@ const About = () => {
             <strong className="text-white">SLIIT</strong> and a passionate{" "}
              <strong className="text-white">full-stack developer</strong> with a strong focus on backend engineering, cloud technologies, and building scalable system architectures.
               Over the past few years, I’ve completed {" "}
-              <strong className="text-white">6+ full-stack projects </strong>
+              <strong className="text-white">4+ full-stack projects </strong>
               using technologies such as MERN, Java JSP/Servlet, PHP-MySQL, and Android, gaining hands-on experience in developing secure APIs, real-time features, and production-ready applications.
                I’ve also collaborated on projects that required working with international standards and Agile workflows, strengthening my ability to deliver reliable solutions in team-based environments.
               
