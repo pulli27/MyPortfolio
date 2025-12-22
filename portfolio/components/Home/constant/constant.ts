@@ -37,17 +37,5 @@ export const NavLinks=[
     },
 ]
 
-export type Project = {
-  title: string;
-  description: string;
-  longDescription: string;
-  image: string;
-  technologies: string[];
-  liveLink: string | null; // Allow null for projects without a live link
-  frontendLink: string;
-  backendLink: string;
-  githubLink?: string; // Optional main github link
-  isFeatured: boolean;
-};
 
 
